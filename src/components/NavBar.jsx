@@ -4,7 +4,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Badge from '@mui/material/Badge';
 import { mobile } from '../responsive';
-
+import { Link } from 'react-router-dom';
 
 const Container = styled.div`
    height: 60px;
@@ -27,7 +27,6 @@ const Left = styled.div`
 
 const Language = styled.span`
    font-size: 14px;
-   cursor: pointer;
    ${mobile({display: 'none'})}
 `
 
@@ -52,8 +51,7 @@ const Center = styled.div`
 
 const Logo = styled.h1`
    font-weight: bold;
-   letter-spacing: 1px;
-   ${mobile({width: '24px', marginLeft: '10px'})}
+   ${mobile({width: '24px', marginLeft: '10px', fontSize: '24px'})}
 `;
 
 
@@ -84,15 +82,23 @@ const NavBar = () => {
                 </SearchContainer>
             </Left>
             <Center>
-                <Logo>SEIF.</Logo>
+                <Logo>
+                  <Link to="/" className='link'>LOGO.</Link>
+                </Logo>
             </Center>
             <Right>
-                <MenuItems>REGISTER</MenuItems>
-                <MenuItems>SIGN IN</MenuItems>
                 <MenuItems>
+                  <Link to="/register" className='link'>REGISTER</Link> 
+                </MenuItems>
+                <MenuItems>
+                  <Link to="/login" className='link'>SIGN IN</Link>
+                </MenuItems>
+                <MenuItems>
+                <Link to="/cart" className='link'>
                  <Badge badgeContent={4} color="primary">
-                    <ShoppingCartOutlinedIcon style={{cursor: 'pointer',}}/>
+                    <ShoppingCartOutlinedIcon style={{cursor: 'pointer'}}/> 
                  </Badge>
+                 </Link>
                 </MenuItems>
             </Right>
         </Wrapper>
