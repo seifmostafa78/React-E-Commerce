@@ -2,9 +2,10 @@ import styled from "styled-components"
 import NavBar from "../components/NavBar";
 import Announcement from "../components/Announcement";
 import Footer from "../components/Footer";
-import RemoveIcon from '@mui/icons-material/Remove';
-import AddIcon from '@mui/icons-material/Add';
 import { mobile } from "../responsive";
+import CartItem from "../components/CartItem";
+import { useCart } from "../context/CartContext";
+import { popularProducts } from "../data";
 
 
 const Container = styled.div``;
@@ -33,6 +34,10 @@ const TopButton = styled.button`
     background-color: ${props => props.type === "filled"? 'black' : 'transparent'};
     font-weight: 600;
     cursor: pointer;
+    transition: 0.5s;
+    &:hover{
+      background-color: ${props => props.type !== "filled" && 'rgba(245, 222, 179, 0.7)'};
+    }
 `;
 
 const TopTexts = styled.div`
@@ -53,81 +58,6 @@ const Bottom = styled.div`
 
 const Info = styled.div`
   flex: 3;
-`;
-
-const Product = styled.div`
-  display: flex;
-  justify-content: space-between;
-  ${mobile({flexDirection: 'column'})}
-`;
-
-const Hr = styled.hr`
-  background-color: #eee;
-  border: none;
-  height: 1px;
-  margin: 20px 0;
-  width: 65vw;
-`;
-
-const ProductDetails = styled.div`
-  flex: 2;
-  display: flex;
-`;
-
-const ProductImage = styled.img`
-  width: 200px;
-`;
-
-const Details = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  padding: 20px;
-`;
-
-const ProductName = styled.span`
-`;
-
-const ProductId = styled.span`
-  ${mobile({margin: '10px 0'})}
-`;
-
-const ProductColor = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 10px;
-  background-color: ${props => props.color};
-`;
-
-const ProductSize = styled.span`
-  ${mobile({marginTop: '10px'})}
-`;
-
-const PriceDetails = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-
-const AmountContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const Amount = styled.span`
-  font-size: 24px;
-  margin: 5px;
-  ${mobile({margin: '5px 15px'})}
-`;
-
-const ProductPrice = styled.span`
-  font-size: 30px;
-  font-weight: 200;
-  ${mobile({marginBottom: '20px'})}
 `;
 
 const Summary = styled.div`
@@ -165,6 +95,7 @@ const SummaryButton = styled.button`
 `;
 
 const Cart = () => {
+  const {cartItems} = useCart()
   return (
     <Container>
         <NavBar/>
@@ -180,67 +111,36 @@ const Cart = () => {
                 <TopButton type="filled">CHECKOUT NOW</TopButton>
             </Top>
             <Bottom>
-                <Info>
-                  <Product>
-                    <ProductDetails>
-                      <ProductImage src="https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1614188818-TD1MTHU_SHOE_ANGLE_GLOBAL_MENS_TREE_DASHERS_THUNDER_b01b1013-cd8d-48e7-bed9-52db26515dc4.png?crop=1xw:1.00xh;center,top&resize=480%3A%2A"/>
-                      <Details>
-                        <ProductName><b>Product:</b> JESSIE THUNDER SHOES</ProductName>
-                        <ProductId><b>ID:</b> 93813718293</ProductId>
-                        <ProductColor color="black"/>
-                        <ProductSize><b>Size:</b> 37.5</ProductSize>
-                      </Details>
-                    </ProductDetails>
-                    <PriceDetails>
-                      <AmountContainer>
-                        <RemoveIcon style={{cursor: 'pointer'}}/>
-                        <Amount>2</Amount>
-                        <AddIcon style={{cursor: 'pointer'}}/>
-                      </AmountContainer>
-                      <ProductPrice>$ 30</ProductPrice>
-                    </PriceDetails>
-                  </Product>
-                  <Hr/>
-                  <Product>
-                    <ProductDetails>
-                      <ProductImage src="https://i.pinimg.com/originals/2d/af/f8/2daff8e0823e51dd752704a47d5b795c.png"/>
-                      <Details>
-                        <ProductName><b>Product:</b> HAKURA T-SHIRT</ProductName>
-                        <ProductId><b>ID:</b> 93813718293</ProductId>
-                        <ProductColor color="gray"/>
-                        <ProductSize><b>Size:</b> M</ProductSize>
-                      </Details>
-                    </ProductDetails>
-                    <PriceDetails>
-                      <AmountContainer>
-                        <RemoveIcon style={{cursor: 'pointer'}}/>
-                        <Amount>1</Amount>
-                        <AddIcon style={{cursor: 'pointer'}}/>
-                      </AmountContainer>
-                      <ProductPrice>$ 30</ProductPrice>
-                    </PriceDetails>
-                  </Product>
-                </Info>
-                <Summary>
-                    <SummaryTitle>ORDER SUMMARY</SummaryTitle>
-                    <SummaryItem>
-                      <SummaryItemText>Subtotal</SummaryItemText>
-                      <SummaryItemPrice>$ 80</SummaryItemPrice>
-                    </SummaryItem>
-                    <SummaryItem>
-                      <SummaryItemText>Estimated Shipping</SummaryItemText>
-                      <SummaryItemPrice>$ 5.90</SummaryItemPrice>
-                    </SummaryItem>
-                    <SummaryItem>
-                      <SummaryItemText>Shipping Discount</SummaryItemText>
-                      <SummaryItemPrice>$ -5.90</SummaryItemPrice>
-                    </SummaryItem>
-                    <SummaryItem total='total'>
-                      <SummaryItemText>Total</SummaryItemText>
-                      <SummaryItemPrice>$ 80</SummaryItemPrice>
-                    </SummaryItem>
-                    <SummaryButton>CHECKOUT NOW</SummaryButton>
-                </Summary>
+              <Info>
+                {cartItems.map((item) => (
+                  <CartItem key={item.id} {...item}/>
+                ))}
+              </Info>
+              <Summary>
+                <SummaryTitle>ORDER SUMMARY</SummaryTitle>
+                <SummaryItem>
+                  <SummaryItemText>Subtotal</SummaryItemText>
+                  <SummaryItemPrice>$ 80</SummaryItemPrice>
+                </SummaryItem>
+                <SummaryItem>
+                  <SummaryItemText>Estimated Shipping</SummaryItemText>
+                  <SummaryItemPrice>$ 5.90</SummaryItemPrice>
+                </SummaryItem>
+                <SummaryItem>
+                  <SummaryItemText>Shipping Discount</SummaryItemText>
+                  <SummaryItemPrice>$ -5.90</SummaryItemPrice>
+                </SummaryItem>
+                <SummaryItem total='total'>
+                  <SummaryItemText>Total</SummaryItemText>
+                  <SummaryItemPrice>
+                    $ {cartItems.reduce((total, item) => {
+                      const product = popularProducts.find((i) => i.id === item.id);
+                      return total + (product?.price || 0) * item.quantity;
+                      }, 0)}
+                  </SummaryItemPrice>
+                </SummaryItem>
+                <SummaryButton>CHECKOUT NOW</SummaryButton>
+              </Summary>
             </Bottom>
         </Wrapper>
         <Footer/>

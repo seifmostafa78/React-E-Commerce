@@ -1,9 +1,9 @@
+import { memo, useCallback, useState } from "react";
 import styled from "styled-components"
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import { Link } from "react-router-dom";
-
+import { useCart } from "../context/CartContext";
 
 const Info = styled.div`
   opacity: 0;
@@ -17,7 +17,7 @@ const Info = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.5s ease;
+  transition: all 0.3s ease;
   cursor: pointer;
 `;
 
@@ -54,26 +54,41 @@ const Icon = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: white;
+  background-color: ${(props) => props.type === "added"? "#6464ff" : "white"};
+  color: ${(props) => props.type === "added" && "white"};
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 10px;
   transition: all 0.5s ease;
   &:hover {
-    background-color: #e9f5f5;
+    // background-color: #e9f5f5;
     transform: scale(1.1);
   }
 `;
 
-const Product = ({item}) => {
+const Product = memo(({item}) => {
+  const {increaseItemsQuantity, removeFromCart} = useCart()
+  const [addedToCart, setAddedToCart] = useState(false)
+ 
+  const handleClick = useCallback((id) => {
+    if(!addedToCart){
+      increaseItemsQuantity(id)
+    }else{
+      removeFromCart(id)
+    }
+    setAddedToCart(!addedToCart)
+  }, [addedToCart, increaseItemsQuantity, removeFromCart]);
+
   return (
-    <Link to="/product/1" className='link'>
     <Container>
         <Circle/>
         <Image src={item.img}/>
         <Info>
-            <Icon>
+            <Icon
+            onClick={() => handleClick(item.id)}
+            type={addedToCart? "added": undefined}
+            >
                 <ShoppingCartOutlinedIcon/>
             </Icon>
             <Icon>
@@ -84,8 +99,7 @@ const Product = ({item}) => {
             </Icon>
         </Info>
     </Container>
-    </Link>
   )
-}
+})
 
 export default Product

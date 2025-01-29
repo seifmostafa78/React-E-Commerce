@@ -5,6 +5,7 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Badge from '@mui/material/Badge';
 import { mobile } from '../responsive';
 import { Link } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 
 const Container = styled.div`
    height: 60px;
@@ -36,6 +37,7 @@ const SearchContainer = styled.div`
    align-items: center;
    margin-left: 25px;
    padding: 5px;
+   ${mobile({marginLeft: '10px'})}
 `;
 
 const Input = styled.input`
@@ -71,6 +73,8 @@ const MenuItems = styled.div`
 `;
 
 const NavBar = () => {
+  const {getCartQuantity} = useCart();
+  
   return (
     <Container>
         <Wrapper>
@@ -95,7 +99,7 @@ const NavBar = () => {
                 </MenuItems>
                 <MenuItems>
                 <Link to="/cart" className='link'>
-                 <Badge badgeContent={4} color="primary">
+                 <Badge badgeContent={getCartQuantity()} color="primary">
                     <ShoppingCartOutlinedIcon style={{cursor: 'pointer'}}/> 
                  </Badge>
                  </Link>
