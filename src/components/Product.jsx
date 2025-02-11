@@ -77,7 +77,7 @@ const Product = memo(({item}) => {
     }else{
       removeFromCart(id)
     }
-    setAddedToCart(!addedToCart)
+    setAddedToCart((prevState) => !prevState)
   }, [addedToCart, increaseItemsQuantity, removeFromCart]);
 
   return (
